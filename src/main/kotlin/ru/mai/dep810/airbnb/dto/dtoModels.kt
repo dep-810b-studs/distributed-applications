@@ -1,15 +1,15 @@
-package ru.mai.dep810.twitter.data
+package ru.mai.dep810.airbnb.dto
 
 import java.util.*
 
-enum class ReservationStatus {Reserved, NotReserved}
+enum class ReservationStatusDto {Reserved, NotReserved}
 
-data class Client(
+data class ClientDto(
         var id : UUID,
         var name: String
 )
 
-data class Adress(
+data class AddressDto(
         var country: String,
         var city: String,
         var street: String,
@@ -18,16 +18,16 @@ data class Adress(
         var flatNumber: Int
 )
 
-data class Room(
+data class RoomDto(
         var id : UUID,
-        var adress: Adress,
+        var address: AddressDto,
         var description: String,
         var attributes: List<String>
 )
 
-data class Reservation(
+data class ReservationDto(
         var roomId: UUID,
         var clientId: UUID,
         var reservationDate: Date,
-        var reservationStatus: ReservationStatus
+        var reservationStatus: ReservationStatusDto
 )
