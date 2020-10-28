@@ -20,3 +20,4 @@ class ClientController(val clientService: ClientService) {
     fun deleteClient(@PathVariable id: UUID) =
             clientService.deleteClient(id)
 }
+
