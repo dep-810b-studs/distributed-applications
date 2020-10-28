@@ -12,3 +12,4 @@ fun Client.toDtoModel() : ClientDto = ClientDto(
         id = this.id,
         name = this.name
 )
+

@@ -13,8 +13,12 @@ class ClientController(val clientService: ClientService) {
             clientService.getAllClients()
 
     @PostMapping
-    fun addClient(@RequestBody clientDto: ClientDto) : ClientDto =
-            clientService.addClient(clientDto.copy())
+    fun addClient(@RequestBody clientDto: ClientDto) : ClientDto
+    {
+        return clientService.addClient(clientDto.copy())
+    }
+
+
 
     @DeleteMapping("/{id}")
     fun deleteClient(@PathVariable id: UUID) =
