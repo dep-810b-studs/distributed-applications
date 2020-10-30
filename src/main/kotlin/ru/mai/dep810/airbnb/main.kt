@@ -18,24 +18,27 @@ import org.elasticsearch.client.RestHighLevelClient
 import org.springframework.data.elasticsearch.client.ClientConfiguration
 import org.springframework.data.elasticsearch.client.RestClients
 import java.io.FileInputStream
-
+import org.apache.http.HttpHost
 
 
 @SpringBootApplication(exclude= arrayOf(MongoAutoConfiguration::class,MongoDataAutoConfiguration::class))
 class AirBnBApplication{
 	@Bean()
     @Scope("singleton")
-	fun mongoOperations() : MongoOperations =
+	fun mongoOperations(@Value("${'$'}{mongo.url}") connectionString: String,
+                        @Value("${'$'}{mongo.database}") databaseName: String) : MongoOperations =
 
-		 MongoTemplate(MongoClients.create("mongodb://localhost:27018"), "tempr")
+        MongoTemplate(MongoClients.create(connectionString), databaseName)
 
-	@Bean()
-	@Scope("singleton")
-	fun elasticOperations() : RestHighLevelClient {
-		var clientConf: ClientConfiguration = ClientConfiguration.builder().connectedTo("localhost:9200").build()
-		return RestClients.create(clientConf).rest()
-		//ElasticsearchTemplate(ElasticsearchClient("mongodb://localhost:27018"), "tempr")
-	}
+
+    @Bean
+    @Scope("singleton")
+    fun elasticRestClient(@Value("${'$'}{elastic.port}") port: String): RestHighLevelClient =
+         RestHighLevelClient(
+                RestClient.builder(
+                        HttpHost("localhost", port.toInt(), "http")
+                ))
+
 
 }
 
