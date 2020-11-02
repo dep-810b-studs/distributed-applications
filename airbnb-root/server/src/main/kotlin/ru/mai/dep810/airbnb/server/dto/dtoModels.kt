@@ -1,12 +1,12 @@
-package ru.mai.dep810.airbnb.dto
+package ru.mai.dep810.airbnb.server.dto
 
 import java.util.*
 
 enum class ReservationStatusDto {Reserved, NotReserved}
 
 data class ClientDto(
-        var id : UUID,
-        var name: String
+        var name: String,
+        var creationDate: Date
 )
 
 data class AddressDto(

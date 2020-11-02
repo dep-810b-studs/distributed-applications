@@ -1,12 +1,15 @@
-package ru.mai.dep810.airbnb.data
+package ru.mai.dep810.airbnb.server.data
 
+import org.springframework.data.mongodb.core.mapping.Document
 import java.util.*
 
 enum class ReservationStatus {Reserved, NotReserved}
 
+@Document("Clients")
 data class Client(
-        var id : UUID,
-        var name: String
+        var id : String,
+        var name: String,
+        var creationDate: Date
 )
 
 data class Address(

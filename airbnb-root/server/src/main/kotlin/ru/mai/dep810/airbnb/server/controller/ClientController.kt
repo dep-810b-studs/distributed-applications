@@ -1,8 +1,8 @@
-package ru.mai.dep810.airbnb.controller
+package ru.mai.dep810.airbnb.server.controller
 
 import org.springframework.web.bind.annotation.*
-import ru.mai.dep810.airbnb.dto.ClientDto
-import ru.mai.dep810.airbnb.service.ClientService
+import ru.mai.dep810.airbnb.server.dto.ClientDto
+import ru.mai.dep810.airbnb.server.service.ClientService
 import java.util.*
 
 @RestController
