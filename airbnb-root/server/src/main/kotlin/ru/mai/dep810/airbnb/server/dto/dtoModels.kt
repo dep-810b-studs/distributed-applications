@@ -9,20 +9,16 @@ data class ClientDto(
         var creationDate: Date
 )
 
-data class AddressDto(
-        var country: String,
-        var city: String,
-        var street: String,
-        var homeNumber: Int,
-        var floorNumber: Int,
-        var flatNumber: Int
-)
-
 data class RoomDto(
-        var id : UUID,
-        var address: AddressDto,
+        var name: String,
         var description: String,
-        var attributes: List<String>
+        var neighborhoodOverview: String,
+        var location: String,
+        var about: String,
+        var neighbourhood: String,
+        var type: String,
+        var price: String,
+        var reviewsPerMonth: String
 )
 
 data class ReservationDto(
