@@ -6,7 +6,7 @@ import ru.mai.dep810.airbnb.server.service.ClientService
 import java.util.*
 
 @RestController
-@RequestMapping("/api/v1/clients")
+@RequestMapping("clients")
 class ClientController(val clientService: ClientService) {
     @GetMapping
     fun allClients() : List<ClientDto> =

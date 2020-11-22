@@ -1,9 +1,10 @@
 package ru.mai.dep810.airbnb.server.data
 
 import org.springframework.data.mongodb.core.mapping.Document
+import java.time.Instant
 import java.util.*
 
-enum class ReservationStatus {Reserved, NotReserved}
+enum class ReservationStatus {NotReserved, Reserved, Paid}
 
 @Document("Clients")
 data class Client(
@@ -26,9 +27,12 @@ data class Room(
         var reviewsPerMonth: String
 )
 
+@Document("Reservations")
 data class Reservation(
+        var id : UUID ,
         var roomId: UUID,
         var clientId: UUID,
-        var reservationDate: Date,
+        var reservationStartDate: Instant,
+        var reservationEndDate: Instant,
         var reservationStatus: ReservationStatus
 )
