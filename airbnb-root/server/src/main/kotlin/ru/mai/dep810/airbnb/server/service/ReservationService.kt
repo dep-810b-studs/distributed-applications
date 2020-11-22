@@ -1,6 +1,6 @@
 package ru.mai.dep810.airbnb.server.service
 
-import org.springframework.beans.factory.annotation.Autowired
+import com.hazelcast.core.HazelcastInstance
 import org.springframework.stereotype.Service
 import ru.mai.dep810.airbnb.server.data.Reservation
 import ru.mai.dep810.airbnb.server.data.ReservationStatus
@@ -19,10 +19,11 @@ interface IReservationService{
 }
 
 @Service("reservationService")
-class ReservationService : IReservationService{
+class ReservationService(val hazelcastInstance: HazelcastInstance,
+                         val reservationRepository: ReservationMongoRepository) : IReservationService{
 
-    @Autowired
-    private lateinit var reservationRepository: ReservationMongoRepository
+    val reservationsCache = hazelcastInstance.getMap<UUID, Reservation>("reservation")
+
     override fun getReserveInfo(reservationId: UUID): Reservation =
             reservationRepository
                     .findById(reservationId)
@@ -42,8 +43,20 @@ class ReservationService : IReservationService{
                     .toList()
 
     override fun reserveRoom(reservation: Reservation) : Reservation {
+        var reservationResult = reservation
+        val lockSuccess = reservationsCache.tryLock(reservation.id)
+        if(!lockSuccess)
+            return reservationResult
         reservation.reservationStatus = ReservationStatus.Reserved
-        return reservationRepository.save(reservation)
+        try{
+            Thread.sleep(20000)
+            reservationResult = reservationRepository.save(reservation)
+        }
+        finally {
+            reservationsCache.unlock(reservation.id)
+        }
+
+        return reservationResult
     }
 
     override fun unReserveRoom(reservationId: UUID) =
@@ -57,9 +70,28 @@ class ReservationService : IReservationService{
     }
 
     override fun payForReservation(reservationId: UUID, amount: Float) : Reservation {
-        val reservation = reservationRepository.findById(reservationId).get()
+        var reservation = reservationRepository.findById(reservationId).get()
+        if(reservation.reservationStatus != ReservationStatus.Reserved)
+            return reservation
+
+        val lockSuccess = reservationsCache.tryLock(reservation.id)
+        if(!lockSuccess)
+            return reservation
+
         reservation.reservationStatus = ReservationStatus.Paid
-        return reservationRepository.save(reservation)
+
+        try{
+            Thread.sleep(20000)
+            reservation = reservationRepository.save(reservation)
+        }
+        finally {
+            reservationsCache.unlock(reservation.id)
+        }
+        return reservation
+    }
+
+    companion object {
+        private const val RESERVATION_PENDING_MINUTES = 2L
     }
 
 }
