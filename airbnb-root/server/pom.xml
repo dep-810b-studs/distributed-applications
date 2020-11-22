@@ -20,6 +20,7 @@
 		<mongo.driver>4.1.0</mongo.driver>
 		<springfox>2.8.0</springfox>
 		<junit>5.7.0</junit>
+		<hazelcast.version>4.0.3</hazelcast.version>
 	</properties>
 
 	<dependencies>
@@ -79,33 +80,17 @@
 			<artifactId>mongodb-driver-sync</artifactId>
 			<version>${mongo.driver}</version>
 		</dependency>
+		<dependency>
+			<groupId>com.hazelcast</groupId>
+			<artifactId>hazelcast-all</artifactId>
+            <version>${hazelcast.version}</version>
+		</dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
             <version>RELEASE</version>
             <scope>test</scope>
         </dependency>
-		<dependency> <!-- Kotlin Spark API dependency -->
-			<groupId>org.jetbrains.kotlinx.spark</groupId>
-			<artifactId>kotlin-spark-api-3.0.0_2.12</artifactId>
-			<version>1.0.0-preview1</version>
-		</dependency>
-		<dependency> <!-- Spark dependency -->
-			<groupId>org.apache.spark</groupId>
-			<artifactId>spark-sql_2.12</artifactId>
-			<version>3.0.0</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.spark</groupId>
-			<artifactId>spark-sql_2.11</artifactId>
-			<version>2.3.0</version>
-			<exclusions>
-				<exclusion>
-					<artifactId>janino</artifactId>
-					<groupId>org.codehaus.janino</groupId>
-				</exclusion>
-			</exclusions>
-		</dependency>
 		<dependency>
 			<groupId>org.codehaus.janino</groupId>
 			<artifactId>janino</artifactId>
