@@ -15,6 +15,10 @@ class RoomController {
     fun top3Rooms() : List<RoomDto> =
             roomService.getTop3Rooms()
 
+    @GetMapping("all")
+    fun allRooms() : List<RoomDto> =
+            roomService.getAllRooms()
+
     @PostMapping
     fun addRoom(@RequestBody roomDto: RoomDto) =
             roomService.addRoom(roomDto)
