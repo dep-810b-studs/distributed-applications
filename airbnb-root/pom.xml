@@ -18,7 +18,10 @@
 
     <modules>
         <module>server</module>
+        <module>sparkTransfer</module>
     </modules>
+
+
 
     <properties>
         <kotlin.version>1.4.20-M1</kotlin.version>

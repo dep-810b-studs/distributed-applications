@@ -6,8 +6,8 @@
 		<groupId>ru.mai.dep810</groupId>
 		<artifactId>airbnb-root</artifactId>
 		<version>1.0-SNAPSHOT</version>
-		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
+
 	<groupId>ru.mai.dep810</groupId>
 	<artifactId>server</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
@@ -28,6 +28,7 @@
 			<artifactId>kotlin-stdlib-jdk8</artifactId>
 			<version>${kotlin.version}</version>
 		</dependency>
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
@@ -85,16 +86,25 @@
             <version>RELEASE</version>
             <scope>test</scope>
         </dependency>
-		<dependency> <!-- Kotlin Spark API dependency -->
+<!--
+		<dependency> &lt;!&ndash; Kotlin Spark API dependency &ndash;&gt;
 			<groupId>org.jetbrains.kotlinx.spark</groupId>
 			<artifactId>kotlin-spark-api-3.0.0_2.12</artifactId>
 			<version>1.0.0-preview1</version>
 		</dependency>
-		<dependency> <!-- Spark dependency -->
+		<dependency> &lt;!&ndash; Spark dependency &ndash;&gt;
 			<groupId>org.apache.spark</groupId>
 			<artifactId>spark-sql_2.12</artifactId>
 			<version>3.0.0</version>
 		</dependency>
+-->
+		<!-- <dependency>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-starter-actuator</artifactId>
+				<version>3.0.0</version>
+		</dependency>
+		-->
+<!--
 		<dependency>
 			<groupId>org.apache.spark</groupId>
 			<artifactId>spark-sql_2.11</artifactId>
@@ -110,6 +120,12 @@
 			<groupId>org.codehaus.janino</groupId>
 			<artifactId>janino</artifactId>
 			<version>3.0.8</version>
+		</dependency>
+-->
+		<dependency>
+			<groupId>spark.sparkTransfer</groupId>
+			<artifactId>sparkTransfer</artifactId>
+			<version>1.0-SNAPSHOT</version>
 		</dependency>
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>

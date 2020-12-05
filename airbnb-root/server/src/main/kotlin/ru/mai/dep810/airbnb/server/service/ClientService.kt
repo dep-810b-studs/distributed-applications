@@ -55,5 +55,7 @@ class ClientService : IClientService {
         val clientsDataImporter = ClientsDataImporter()
         val clients = clientsDataImporter.loadFromXml(dumpConfiguration.path)
         this.addClients(clients)
+
+
     }
 }

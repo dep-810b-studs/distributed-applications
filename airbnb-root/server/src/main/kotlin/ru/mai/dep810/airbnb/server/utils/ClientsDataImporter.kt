@@ -30,6 +30,9 @@ class ClientsDataImporter : IClientsDataImporter {
                 .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
 
         val stackOverflowUsers = xmlMapper.readValue<List<StackOverflowUser>>(textWithUsersData)
+
+
+
         clients = stackOverflowUsers
                 .parallelStream()
                 .map { user -> user.toClientDto() }
