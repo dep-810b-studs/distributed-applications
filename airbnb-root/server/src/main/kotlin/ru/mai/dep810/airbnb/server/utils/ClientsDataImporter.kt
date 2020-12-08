@@ -32,7 +32,6 @@ class ClientsDataImporter : IClientsDataImporter {
         val stackOverflowUsers = xmlMapper.readValue<List<StackOverflowUser>>(textWithUsersData)
 
 
-
         clients = stackOverflowUsers
                 .parallelStream()
                 .map { user -> user.toClientDto() }
