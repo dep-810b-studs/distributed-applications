@@ -1,83 +1,55 @@
 package spark.sparkTransfer
 
-import com.fasterxml.jackson.databind.DeserializationFeature
-import com.mongodb.spark.MongoConnector
-import org.apache.spark.api.java.JavaSparkContext
 import com.mongodb.spark.MongoSpark
-import com.mongodb.spark.config.WriteConfig
-import org.apache.commons.codec.binary.StringUtils
 import org.apache.spark.SparkConf
-import org.apache.spark.SparkContext
-import org.apache.spark.api.java.JavaRDD;
-import org.apache.spark.sql.*
-import org.apache.spark.sql.catalog.Column
+import org.apache.spark.sql.SparkSession
+import org.apache.spark.sql.functions.lit
 import org.apache.spark.sql.functions.col
-import ru.mai.dep810.airbnb.server.dto.StackOverflowUser
-import com.fasterxml.jackson.dataformat.xml.XmlMapper
-import com.fasterxml.jackson.module.kotlin.registerKotlinModule
-import ru.mai.dep810.airbnb.server.data.Room
-import java.io.StringReader
-import org.apache.commons.csv.CSVFormat
-import org.apache.commons.csv.CSVParser
-import org.apache.commons.lang.StringUtils.isNotBlank
-import javax.swing.text.Document
+import org.apache.spark.sql.functions.callUDF
+import org.apache.spark.sql.functions.udf
+import org.apache.spark.sql.types.DataTypes
+import org.bson.Document
+import java.util.*
+
+//import java.util.*
 
 
 interface ISparkTransfer{
-    fun loadFromCsv(path: String)
-    fun loadFromXml(path:String)
-    fun DocumentTransform(element:String)
+    fun loadFromCsv(path: String, database: String,host: String,port: Int,flows: Int)
+    fun loadFromXml(path: String, database:String, host:String, port:Int, flows:Int)
 }
 
 object SparkTransfer : ISparkTransfer {
 
 
-    val columnsAr = arrayOf("id","name","description","neighborhood_overview","host_location","host_about",
-            "host_neighbourhood",
-            "room_type",
-            "price",
-            "reviews_per_month")
+    override fun loadFromXml(path: String, database:String, host:String, port:Int, flows:Int) {
 
-    override fun DocumentTransform(element: String) {
-
-    }
-
-    override fun loadFromXml(path: String) {
-
-        val sparkConf: SparkConf = SparkConf().setAppName("Spark Tags Popularity")
-        sparkConf.setMaster("local[4]")
-        sparkConf.set("spark.mongodb.output.uri","mongodb://localhost:27018/AirBnB.Clients")
-        sparkConf.set("spark.mongodb.output.database","AirBnB")
+        val sparkConf: SparkConf = SparkConf().setAppName("Spark XML loader")
+        sparkConf.setMaster("local[$flows]")
+        sparkConf.set("spark.mongodb.output.uri","mongodb://$host:$port/$database.Clients")
+        sparkConf.set("spark.mongodb.output.database","$database")
         sparkConf.set("spark.mongodb.output.collection","Clients")
         sparkConf.set("spark.mongodb.output.maxBatchSize","1024")
+        //sparkConf.set("spark.mongodb.output.shardKey", "id")
 
         val sesBuild = SparkSession.builder().config(sparkConf).orCreate
 
-        val xmlMapper = XmlMapper()
-                .registerKotlinModule()
-                .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
 
-        val df = sesBuild
-                .sparkContext()
-                .textFile(path,1)
+        val df  = sesBuild
+                .read()
+                .format("com.databricks.spark.xml")
+                .option("rowTag","row")
+                .load(path)
                 .toJavaRDD()
-                .map{row-> xmlMapper.readValue<StackOverflowUser>(row,StackOverflowUser::class.java)}
-                .take(5)
-                //.map{row-> DocumentTransform(row.toString())}
-
-        System.out.println(df)
-        //val df = sesBuild.sparkContext().textFile("ddd",1).toJavaRDD().map{row->Document(row)}
-                //.format("xml")
-                //.option("escape", null)
-                //.load(path)
-                //.rdd()
-                //.map(XmlUtils::parseXmlToMap)
-                //.filter{m -> StringUtils.isNotBlank(m.get(1))}
-                //.map{XmlUtils::unescape}
-                //.map{d -> Document(Collections.unmodifiableMap(d))}
+                .map{row-> Document(mapOf("name" to row.getAs<String>("_DisplayName"),
+                        "creationDate" to row.getAs<Date>("_CreationDate"),
+                        "_id" to UUID.randomUUID().toString())
+                )
+                 }
 
 
-        //MongoSpark.save(df);
+        MongoSpark.save(df)
+        sesBuild.stop()
 
 
 
@@ -85,19 +57,44 @@ object SparkTransfer : ISparkTransfer {
 
 
 
-    override fun loadFromCsv(path: String) {
+    override fun loadFromCsv(path: String, database: String, host: String, port: Int, flows: Int)  {
 
 
-        val sparkConf: SparkConf = SparkConf().setAppName("Spark Tags Popularity")
-            sparkConf.setMaster("local[4]")
-            sparkConf.set("spark.mongodb.output.uri","mongodb://localhost:27018/AirBnB.Rooms")
-            sparkConf.set("spark.mongodb.output.database","AirBnB")
+        val sparkConf: SparkConf = SparkConf().setAppName("Spark CSV loader")
+            sparkConf.setMaster("local[$flows]")
+            sparkConf.set("spark.mongodb.output.uri","mongodb://$host:$port/$database.Rooms")
+            sparkConf.set("spark.mongodb.output.database","$database")
             sparkConf.set("spark.mongodb.output.collection","Rooms")
             sparkConf.set("spark.mongodb.output.maxBatchSize","1024")
+            //sparkConf.set("spark.mongodb.output.shardKey", "id")
 
-        val sesBuild = SparkSession.builder().config(sparkConf).orCreate
 
-        val df:Dataset<Row> = sesBuild.read()
+        val sesBuild = SparkSession.builder()
+                .config(sparkConf)
+                .orCreate
+
+        //val func_prep:String = UUID.randomUUID().toString()
+
+        //val udfRun = udf({UUID.randomUUID().toString()},)
+
+
+        //sesBuild.udf().register( "randUdf", udf({_-> UUID.randomUUID().toString()}, DataTypes.StringType).asNondeterministic())
+
+        //val tr = udf({UUID.randomUUID().toString()},DataTypes.StringType)
+
+        val columnsAr = arrayOf("id","name","description","neighborhood_overview","host_location","host_about",
+                "host_neighbourhood",
+                "room_type",
+                "price",
+                "reviews_per_month")
+
+        val superhero = columnsAr.map{ col(it) }.toTypedArray()
+
+        //val superhero = columnsAr.map{ it }
+
+        //System.out.println(superhero)
+
+        val df = sesBuild.read()
                 .format("csv")//ஸ
                 .option("sep","ஸ")
                 .option("header","true")
@@ -106,21 +103,25 @@ object SparkTransfer : ISparkTransfer {
                 .option("multiline",true)
                 .option("inferSchema", "true")
                 .load(path)
-                .select(*(columnsAr.map { col(it) }.toTypedArray()))
+                //.withColumn("id", lit(1))
+                //.withColumn("id",udfRun())
+                .select(*superhero)
+                .withColumnRenamed("id","_id")
+
 
         MongoSpark.save(df)
 
-
-
-
-
-
+        sesBuild.stop()
 
     }
+
 }
 
 
-fun main(args: Array<String>) {
-    //SparkTransfer.loadFromCsv("airbnb-root/server/src/main/resources/listings.csv")
-    SparkTransfer.loadFromXml("airbnb-root/server/src/main/resources/Users.xml")
-}
+/*fun main(args: Array<String>) {
+    SparkTransfer.loadFromXml("D:/GIT/distributed-applications/airbnb-root/server/src/main/resources/us.xml",
+            "AirBnb","localhost",27018,5)
+    SparkTransfer.loadFromCsv("D:/GIT/distributed-applications/airbnb-root/server/src/main/resources/listings.csv",
+    "AirBnb","localhost",27018,5)
+
+}*/

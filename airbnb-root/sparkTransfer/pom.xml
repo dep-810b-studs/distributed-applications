@@ -27,25 +27,56 @@
         <scala.version>2.12</scala.version>
     </properties>
 
+
+
     <dependencies>
+
+
+        <dependency>
+            <groupId>org.apache.spark</groupId>
+            <artifactId>spark-sql_2.12</artifactId>
+            <version>3.0.0</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>janino</artifactId>
+                    <groupId>org.codehaus.janino</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>commons-compiler</artifactId>
+                    <groupId>org.codehaus.janino</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <artifactId>janino</artifactId>
+            <groupId>org.codehaus.janino</groupId>
+            <version>3.0.8</version>
+        </dependency>
+        <dependency>
+            <artifactId>commons-compiler</artifactId>
+            <groupId>org.codehaus.janino</groupId>
+            <version>3.0.8</version>
+        </dependency>
         <!--<dependency>
             <groupId>org.codehaus.janino</groupId>
             <artifactId>janino</artifactId>
             <version>3.1.2</version>
             <scope>runtime</scope>
         </dependency>-->
+
+        <!-- https://mvnrepository.com/artifact/com.databricks/spark-xml -->
         <dependency>
-            <groupId>ru.mai.dep810</groupId>
-            <artifactId>server</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
+            <groupId>com.databricks</groupId>
+            <artifactId>spark-xml_2.12</artifactId>
+            <version>0.11.0</version>
         </dependency>
 
-        <dependency>
+        <!-- <dependency>
             <groupId>org.codehaus.janino</groupId>
             <artifactId>janino</artifactId>
             <version>3.0.8</version>
             <scope>runtime</scope>
-        </dependency>
+        </dependency> -->
 
         <dependency>
             <groupId>org.mongodb.spark</groupId>
@@ -57,17 +88,17 @@
             <artifactId>spark-core_2.12</artifactId>
             <version>${spark.version}</version>
         </dependency>
-        <dependency>
+        <!--<dependency>
             <groupId>org.apache.spark</groupId>
             <artifactId>spark-sql_2.12</artifactId>
-            <version>${spark.version}</version>
+            <version>3.0.0</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.codehaus.janino</groupId>
                     <artifactId>commons-compiler</artifactId>
                 </exclusion>
             </exclusions>
-        </dependency>
+        </dependency>-->
     </dependencies>
 
 
