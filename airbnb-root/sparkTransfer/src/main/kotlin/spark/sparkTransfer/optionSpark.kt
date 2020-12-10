@@ -8,6 +8,9 @@ import org.apache.spark.sql.functions.col
 import org.apache.spark.sql.functions.callUDF
 import org.apache.spark.sql.functions.udf
 import org.apache.spark.sql.types.DataTypes
+import java.io.File
+import java.io.FileInputStream
+import java.util.*
 import org.bson.Document
 import java.util.*
 
@@ -118,10 +121,24 @@ object SparkTransfer : ISparkTransfer {
 }
 
 
-/*fun main(args: Array<String>) {
-    SparkTransfer.loadFromXml("D:/GIT/distributed-applications/airbnb-root/server/src/main/resources/us.xml",
-            "AirBnb","localhost",27018,5)
-    SparkTransfer.loadFromCsv("D:/GIT/distributed-applications/airbnb-root/server/src/main/resources/listings.csv",
-    "AirBnb","localhost",27018,5)
+fun main(args: Array<String>) {
 
-}*/
+    val file = File("D:/GIT/distributed-applications/airbnb-root/sparkTransfer/src/main/resources/application.properties")
+
+    val prop = Properties()
+    FileInputStream(file).use { prop.load(it) }
+    val abs = prop.getProperty("")
+
+    SparkTransfer.loadFromXml(prop.getProperty("dump.clients.path"),
+            prop.getProperty("mongo.database"),
+            prop.getProperty("mongo.host"),
+            prop.getProperty("mongo.port").toInt(),
+            prop.getProperty("dump.clients.flows").toInt() )
+
+    SparkTransfer.loadFromCsv(prop.getProperty("dump.rooms.path"),
+            prop.getProperty("mongo.database"),
+            prop.getProperty("mongo.host"),
+            prop.getProperty("mongo.port").toInt(),
+            prop.getProperty("dump.rooms.flows").toInt() )
+
+}

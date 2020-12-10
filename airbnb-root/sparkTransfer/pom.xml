@@ -31,32 +31,34 @@
 
     <dependencies>
 
-
-        <dependency>
-            <groupId>org.apache.spark</groupId>
-            <artifactId>spark-sql_2.12</artifactId>
-            <version>3.0.0</version>
-            <exclusions>
-                <exclusion>
+        <!--
+                <dependency>
+                    <groupId>org.apache.spark</groupId>
+                    <artifactId>spark-sql_2.12</artifactId>
+                    <version>3.0.0</version>
+                    <exclusions>
+                        <exclusion>
+                            <artifactId>janino</artifactId>
+                            <groupId>org.codehaus.janino</groupId>
+                        </exclusion>
+                        <exclusion>
+                            <artifactId>commons-compiler</artifactId>
+                            <groupId>org.codehaus.janino</groupId>
+                        </exclusion>
+                    </exclusions>
+                </dependency>
+                <dependency>
                     <artifactId>janino</artifactId>
                     <groupId>org.codehaus.janino</groupId>
-                </exclusion>
-                <exclusion>
+                    <version>3.1.2</version>
+                </dependency>
+                <dependency>
                     <artifactId>commons-compiler</artifactId>
                     <groupId>org.codehaus.janino</groupId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <artifactId>janino</artifactId>
-            <groupId>org.codehaus.janino</groupId>
-            <version>3.0.8</version>
-        </dependency>
-        <dependency>
-            <artifactId>commons-compiler</artifactId>
-            <groupId>org.codehaus.janino</groupId>
-            <version>3.0.8</version>
-        </dependency>
+                    <version>3.1.2</version>
+                </dependency>
+                -->
+
         <!--<dependency>
             <groupId>org.codehaus.janino</groupId>
             <artifactId>janino</artifactId>
@@ -71,12 +73,12 @@
             <version>0.11.0</version>
         </dependency>
 
-        <!-- <dependency>
+         <dependency>
             <groupId>org.codehaus.janino</groupId>
             <artifactId>janino</artifactId>
             <version>3.0.8</version>
             <scope>runtime</scope>
-        </dependency> -->
+        </dependency>
 
         <dependency>
             <groupId>org.mongodb.spark</groupId>
@@ -88,7 +90,7 @@
             <artifactId>spark-core_2.12</artifactId>
             <version>${spark.version}</version>
         </dependency>
-        <!--<dependency>
+        <dependency>
             <groupId>org.apache.spark</groupId>
             <artifactId>spark-sql_2.12</artifactId>
             <version>3.0.0</version>
@@ -98,7 +100,7 @@
                     <artifactId>commons-compiler</artifactId>
                 </exclusion>
             </exclusions>
-        </dependency>-->
+        </dependency>
     </dependencies>
 
 
