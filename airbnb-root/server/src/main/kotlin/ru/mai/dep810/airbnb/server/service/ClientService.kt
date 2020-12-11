@@ -9,7 +9,6 @@ import ru.mai.dep810.airbnb.server.repository.MongoClientRepository
 import ru.mai.dep810.airbnb.server.mapping.toDataModel
 import ru.mai.dep810.airbnb.server.mapping.toDtoModel
 import ru.mai.dep810.airbnb.server.utils.ClientsDataImporter
-import spark.sparkTransfer.SparkTransfer.loadFromXml
 import java.util.*
 import javax.annotation.PostConstruct
 

@@ -1,5 +1,6 @@
 package ru.mai.dep810.airbnb.server.service
 
+/*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import ru.mai.dep810.airbnb.server.configuration.DumpClientsConfiguration
@@ -28,8 +29,8 @@ class DumpService {
                 dumpConfigurationClients.path.isEmpty())
             return;
 
-        SparkTransfer.loadFromXml(dumpConfigurationClients.path, dumpMongoConfiguration.database, dumpMongoConfiguration.host, dumpMongoConfiguration.port, dumpConfigurationClients.flows)
-        SparkTransfer.loadFromCsv(dumpConfigurationRooms.path, dumpMongoConfiguration.database, dumpMongoConfiguration.host, dumpMongoConfiguration.port, dumpConfigurationRooms.flows)
+        SparkTransfer.loadFromXmlMongo(dumpConfigurationClients.path, dumpMongoConfiguration.database, dumpMongoConfiguration.host, dumpMongoConfiguration.port, dumpConfigurationClients.flows)
+        SparkTransfer.loadFromCsvMongo(dumpConfigurationRooms.path, dumpMongoConfiguration.database, dumpMongoConfiguration.host, dumpMongoConfiguration.port, dumpConfigurationRooms.flows)
         //val clientsDataImporter = ClientsDataImporter()
         //val clients = clientsDataImporter.loadFromXml(dumpConfiguration.path)
         //this.addClients(clients)
@@ -38,3 +39,5 @@ class DumpService {
     }
 
 }
+*/
+

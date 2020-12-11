@@ -18,7 +18,8 @@
 
     <modules>
         <module>server</module>
-        <module>sparkTransfer</module>
+        <module>sparkTransferMongo</module>
+        <module>sparkTransferElastic</module>
     </modules>
 
 

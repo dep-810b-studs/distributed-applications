@@ -12,7 +12,6 @@ import ru.mai.dep810.airbnb.server.repository.MongoRoomRepository
 import ru.mai.dep810.airbnb.server.utils.RoomsDataImporter
 import javax.annotation.PostConstruct
 import kotlin.streams.toList
-import spark.sparkTransfer.SparkTransfer.loadFromCsv
 
 interface IRoomService{
     fun getAllRooms() : List<RoomDto>
