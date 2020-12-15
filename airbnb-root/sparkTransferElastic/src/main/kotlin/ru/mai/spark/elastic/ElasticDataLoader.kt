@@ -1,11 +1,10 @@
 package ru.mai.spark.elastic
 
 import org.apache.spark.SparkConf
+import org.apache.spark.SparkContext
 import org.apache.spark.api.java.JavaRDD
 import org.apache.spark.api.java.JavaSparkContext
-import org.apache.spark.sql.Dataset
-import org.apache.spark.sql.Row
-import org.apache.spark.sql.SparkSession
+import org.apache.spark.sql.*
 import org.apache.spark.sql.functions.lit
 import org.apache.spark.sql.functions.col
 import org.apache.spark.sql.functions.callUDF
@@ -30,18 +29,21 @@ interface ISparkTransferElastic{
 object SparkTransferElastic : ISparkTransferElastic {
 
     override fun loadFromCsvElastic(path: String, elasticPort: String, elasticHost: String, flows: Int, index: String) {
+
         val sparkConf: SparkConf = SparkConf().setAppName("Spark CSV loader for Elastic")
         sparkConf.setMaster("local[$flows]")
-        sparkConf.set("es.http.timeout", "5m")
+        //sparkConf.set("es.http.timeout", "5m")
         sparkConf.set("es.nodes", "$elasticHost:${elasticPort.toString()}" )
-        sparkConf.set("es.http.retries", "10")
-        sparkConf.set("es.batch.write.retry.count", "10")
-        sparkConf.set("es.batch.write.retry.wait", "30s")
-        sparkConf.set("es.index.auto.create", "true")
+        //sparkConf.set("es.http.retries", "10")
+        //sparkConf.set("es.batch.write.retry.count", "10")
+        //sparkConf.set("es.batch.write.retry.wait", "30s")
+        //sparkConf.set("es.index.auto.create", "true")
 
         val sesBuild = SparkSession.builder().config(sparkConf).orCreate
+
         //val sesBuild = JavaSparkContext(sparkConf)
 
+//        val columnsAr = arrayOf("id")
         val columnsAr = arrayOf("id","name","description","neighborhood_overview","host_location","host_about",
                 "host_neighbourhood",
                 "room_type",
@@ -50,7 +52,7 @@ object SparkTransferElastic : ISparkTransferElastic {
 
         val superhero = columnsAr.map{ col(it) }.toTypedArray()
 
-        val rdd: JavaRDD<Row> = sesBuild.read()
+        val rdd: JavaRDD<Map<String, String>> = sesBuild.read()
                 .format("csv")//ஸ
                 .option("sep","ஸ")
                 .option("header","true")
@@ -62,13 +64,19 @@ object SparkTransferElastic : ISparkTransferElastic {
                 //.withColumn("id", lit(1))
                 //.withColumn("id",udfRun())
                 .select(*superhero)
-                .withColumnRenamed("id","_id")
+//                .withColumnRenamed("id","_id")
                 .toJavaRDD()
+                .map { row ->
+                    (columnsAr.indices)
+                            .map { index -> columnsAr[index] to row.getString(index) }
+                            .associateBy({ it.first }, { it.second })
+                            .toMap()
+                }
+                .filter { row -> (row["id"]?.length ?: 0) < 50 }
 
+//        println(rdd.take(10))
 
-
-
-        JavaEsSpark.saveToEs(rdd, index, Collections.singletonMap("es.mapping.id", "_id"))
+        JavaEsSpark.saveToEs(rdd, index, Collections.singletonMap("es.mapping.id", "id"))
         sesBuild.stop()
 
 
@@ -122,10 +130,10 @@ fun main() {
             prop.getProperty("elastic.rooms.index")
     )
 
-    SparkTransferElastic.loadFromXmlElastic(prop.getProperty("dump.clients.path"),
+            /*SparkTransferElastic.loadFromXmlElastic(prop.getProperty("dump.clients.path"),
             prop.getProperty("elastic.port"),
             prop.getProperty("elastic.host"),
             prop.getProperty("elastic.flows").toInt(),
-            prop.getProperty("elastic.clients.index"))
+            prop.getProperty("elastic.clients.index"))*/
 
 }
