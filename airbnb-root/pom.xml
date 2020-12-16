@@ -18,7 +18,11 @@
 
     <modules>
         <module>server</module>
+        <module>sparkTransferMongo</module>
+        <module>sparkTransferElastic</module>
     </modules>
+
+
 
     <properties>
         <kotlin.version>1.4.20-M1</kotlin.version>
@@ -35,6 +39,15 @@
             <artifactId>kotlin-test</artifactId>
             <version>${kotlin.version}</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-csv</artifactId>
+            <version>1.8</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.module</groupId>
+            <artifactId>jackson-module-kotlin</artifactId>
         </dependency>
     </dependencies>
 
@@ -89,7 +102,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <jvmTarget>13</jvmTarget>
+                    <jvmTarget>1.8</jvmTarget>
                 </configuration>
             </plugin>
         </plugins>

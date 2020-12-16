@@ -3,6 +3,7 @@ package ru.mai.dep810.airbnb.server.service
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import ru.mai.dep810.airbnb.server.configuration.DumpClientsConfiguration
+import ru.mai.dep810.airbnb.server.configuration.DumpMongoConfiguration
 import ru.mai.dep810.airbnb.server.dto.ClientDto
 import ru.mai.dep810.airbnb.server.repository.MongoClientRepository
 import ru.mai.dep810.airbnb.server.mapping.toDataModel
@@ -23,8 +24,7 @@ class ClientService : IClientService {
 
     @Autowired
     private lateinit var clientRepository: MongoClientRepository
-    @Autowired
-    private lateinit var dumpConfiguration: DumpClientsConfiguration
+
 
     override fun getAllClients(): List<ClientDto>  =
         clientRepository
@@ -45,15 +45,5 @@ class ClientService : IClientService {
     override fun deleteClient(uuid: UUID) =
             clientRepository.deleteById(uuid)
 
-    @PostConstruct
-    private fun init() {
-        if(      dumpConfiguration == null||
-                !dumpConfiguration?.needed!! ||
-                 dumpConfiguration.path.isEmpty())
-            return;
 
-        val clientsDataImporter = ClientsDataImporter()
-        val clients = clientsDataImporter.loadFromXml(dumpConfiguration.path)
-        this.addClients(clients)
-    }
 }

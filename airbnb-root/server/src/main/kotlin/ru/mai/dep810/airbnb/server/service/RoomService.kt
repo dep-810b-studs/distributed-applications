@@ -2,6 +2,7 @@ package ru.mai.dep810.airbnb.server.service
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import ru.mai.dep810.airbnb.server.configuration.DumpMongoConfiguration
 import ru.mai.dep810.airbnb.server.configuration.DumpRoomsConfiguration
 import ru.mai.dep810.airbnb.server.data.Room
 import ru.mai.dep810.airbnb.server.dto.RoomDto
@@ -23,8 +24,6 @@ class RoomService : IRoomService{
 
     @Autowired
     private lateinit var roomRepository: MongoRoomRepository
-    @Autowired
-    private lateinit var dumpConfiguration: DumpRoomsConfiguration
 
     override fun getAllRooms(): List<RoomDto> =
         roomRepository
@@ -49,15 +48,5 @@ class RoomService : IRoomService{
                     .findTop3ByOrderByIdDesc()
                     .map{room -> room.toDtoModel()}
 
-    @PostConstruct
-    private fun init() {
-        if(      dumpConfiguration == null||
-                !dumpConfiguration?.needed!! ||
-                dumpConfiguration.path.isEmpty())
-            return;
 
-        val clientsDataImporter = RoomsDataImporter()
-        val rooms = clientsDataImporter.loadFromCsv(dumpConfiguration.path)
-        this.addRooms(rooms)
-    }
 }
