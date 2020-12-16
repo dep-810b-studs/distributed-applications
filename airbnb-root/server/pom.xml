@@ -20,6 +20,7 @@
 		<mongo.driver>4.1.0</mongo.driver>
 		<springfox>2.8.0</springfox>
 		<junit>5.7.0</junit>
+		<hazelcast.version>4.0.3</hazelcast.version>
 	</properties>
 
 	<dependencies>
@@ -79,6 +80,11 @@
 			<groupId>org.mongodb</groupId>
 			<artifactId>mongodb-driver-sync</artifactId>
 			<version>${mongo.driver}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.hazelcast</groupId>
+			<artifactId>hazelcast-all</artifactId>
+            <version>${hazelcast.version}</version>
 		</dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>

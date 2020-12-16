@@ -1,6 +1,5 @@
 package ru.mai.dep810.airbnb.server.configuration
 
-
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import springfox.documentation.builders.PathSelectors
@@ -19,7 +18,7 @@ class SwaggerConfiguration {
     fun api(): Docket {
         return Docket(DocumentationType.SWAGGER_2)
                 .select()
-                .apis(RequestHandlerSelectors.any())
+                .apis(RequestHandlerSelectors.basePackage("ru.mai.dep810"))
                 .paths(PathSelectors.any())
                 .build()
                 .apiInfo(getApiInfo())

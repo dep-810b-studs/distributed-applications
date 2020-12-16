@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.*
 import ru.mai.dep810.airbnb.server.dto.RoomDto
 import ru.mai.dep810.airbnb.server.service.RoomService
 @RestController
-@RequestMapping("/api/v1/rooms")
+@RequestMapping("rooms")
 class RoomController {
     @Autowired
     private lateinit var roomService : RoomService
@@ -13,6 +13,10 @@ class RoomController {
     @GetMapping
     fun top3Rooms() : List<RoomDto> =
             roomService.getTop3Rooms()
+
+    @GetMapping("all")
+    fun allRooms() : List<RoomDto> =
+            roomService.getAllRooms()
 
     @PostMapping
     fun addRoom(@RequestBody roomDto: RoomDto) =
