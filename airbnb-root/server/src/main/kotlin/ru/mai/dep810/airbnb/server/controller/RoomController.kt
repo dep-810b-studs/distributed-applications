@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
 import ru.mai.dep810.airbnb.server.dto.RoomDto
 import ru.mai.dep810.airbnb.server.service.RoomService
+import java.util.*
+
 @RestController
 @RequestMapping("rooms")
 class RoomController {
@@ -21,4 +23,9 @@ class RoomController {
     @PostMapping
     fun addRoom(@RequestBody roomDto: RoomDto) =
             roomService.addRoom(roomDto)
+
+    @PostMapping("textSearch")
+    fun elasticSearch(@RequestBody text: String): List<RoomDto> =
+            roomService.searchComon(text)
+
 }

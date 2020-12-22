@@ -64,6 +64,12 @@ object SparkTransferElastic : ISparkTransferElastic {
                 //.withColumn("id", lit(1))
                 //.withColumn("id",udfRun())
                 .select(*superhero)
+                .withColumnRenamed("neighborhood_overview", "neighborhoodOverview")
+                .withColumnRenamed("host_location", "location")
+                .withColumnRenamed("host_about","about")
+                .withColumnRenamed("room_type","type")
+                .withColumnRenamed("reviews_per_month","reviewsPerMonth")
+                .withColumnRenamed("host_neighbourhood","neighbourhood")
 //                .withColumnRenamed("id","_id")
                 .toJavaRDD()
                 .map { row ->

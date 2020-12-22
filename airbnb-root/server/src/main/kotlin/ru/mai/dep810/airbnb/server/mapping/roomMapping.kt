@@ -2,11 +2,12 @@ package ru.mai.dep810.airbnb.server.mapping
 
 import org.apache.commons.csv.CSVRecord
 import ru.mai.dep810.airbnb.server.data.Room
+import ru.mai.dep810.airbnb.server.data.RoomElastic
 import ru.mai.dep810.airbnb.server.dto.RoomDto
 import java.util.*
 
-fun RoomDto.toDataModel() : Room = Room(
-        id = UUID.randomUUID(),
+fun RoomDto.toDataModel(id:UUID) : Room = Room(
+        id = id,
         name = this.name,
         description = this.description,
         neighborhoodOverview = this.neighborhoodOverview,
@@ -16,6 +17,19 @@ fun RoomDto.toDataModel() : Room = Room(
         type = this.type ,
         price = this.price,
         reviewsPerMonth = this.reviewsPerMonth
+)
+
+fun RoomDto.toElasticDataModel(id: UUID): RoomElastic = RoomElastic(
+        id = id,
+        name = this.name,
+        description = this.description,
+        neighborhoodOverview = this.neighborhoodOverview,
+        location = this.location,
+        about = this.about,
+        neighbourhood = this.neighbourhood,
+        type = this.type ,
+        price = this.price,
+        reviewsPerMonth = this.reviewsPerMonth.toFloat()
 )
 
 fun Room.toDtoModel() : RoomDto = RoomDto(

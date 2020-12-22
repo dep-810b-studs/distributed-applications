@@ -3,12 +3,14 @@ package ru.mai.dep810.airbnb.server.data
 import org.springframework.data.mongodb.core.mapping.Document
 import java.time.Instant
 import java.util.*
+import org.springframework.data.annotation.Id
+//import org.springframework.data.elasticsearch.annotations.Document
 
 enum class ReservationStatus {NotReserved, Reserved, Paid}
 
 @Document("Clients")
 data class Client(
-        var id : String,
+        var _id : String,
         var name: String,
         var creationDate: Date
 )
@@ -26,6 +28,8 @@ data class Room(
         var price: String,
         var reviewsPerMonth: String
 )
+
+
 
 @Document("Reservations")
 data class Reservation(
