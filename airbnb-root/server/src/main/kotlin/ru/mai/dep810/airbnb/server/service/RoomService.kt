@@ -26,7 +26,7 @@ interface IRoomService{
     fun getAllRooms() : List<RoomDto>
     fun addRoom(room: RoomDto) : RoomDto
     fun addRooms(room: List<RoomDto>)
-    fun searchComon(text:String):List<RoomDto>
+    fun searchComon(text:String):List<RoomElastic>
 }
 
 @Service("roomService")
@@ -38,8 +38,7 @@ class RoomService : IRoomService{
     @Autowired
     private lateinit var roomElasticRepository: ElasticRoomRepository
 
-    @Autowired
-    private  lateinit var elasticsearchTemplate: ElasticsearchTemplate
+
 
 
 
@@ -76,25 +75,8 @@ class RoomService : IRoomService{
                     .map{room -> room.toDtoModel()}
 
 
-    override fun searchComon(text:String):List<RoomDto> {
-
-        val nativeSearchQueryBuilder =  NativeSearchQueryBuilder()
-        val builder = QueryBuilders.boolQuery()
-        builder.must(QueryStringQueryBuilder(text)
-                .field("neighbourhood")
-                .field("location")
-                .field("about")
-                .field("description"))
-        nativeSearchQueryBuilder.withQuery(builder)
-        val query = nativeSearchQueryBuilder.build()
-        val blogList : List<RoomDto> = elasticsearchTemplate.queryForList(query, RoomDto.class)
-
-
-
-    }
-
-
-
+    override fun searchComon(text:String): List<RoomElastic> =
+         roomElasticRepository.findByName(text)
 
 }
 

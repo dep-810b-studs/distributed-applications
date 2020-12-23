@@ -30,8 +30,8 @@ class ReservationsGeneratorTests {
         //assert
         assertEquals(2, actualReservations.size)
 
-        assertEquals(firstClient.id.toString(), actualReservations[0].clientId.toString())
-        assertEquals(secondClient.id.toString(), actualReservations[1].clientId.toString())
+        assertEquals(firstClient._id.toString(), actualReservations[0].clientId.toString())
+        assertEquals(secondClient._id.toString(), actualReservations[1].clientId.toString())
 
         assertEquals(firstRoom.id.toString(), actualReservations[0].roomId.toString())
         assertEquals(secondRoom.id.toString(), actualReservations[1].roomId.toString())

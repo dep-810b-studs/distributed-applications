@@ -25,7 +25,7 @@ class ReservationsGenerator : IReservationsGenerator{
             val reservation = Reservation(
                     randomUUID(),
                     rooms[i].id,
-                    fromString(clients[i].id),
+                    fromString(clients[i]._id),
                     reservationStartDate = Instant.now().plus(daysDelta, ChronoUnit.DAYS),
                     reservationEndDate = Instant.now().plus(daysDelta + daysCount, ChronoUnit.DAYS),
                     reservationStatus = ReservationStatus.Paid
