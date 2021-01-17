@@ -5,7 +5,7 @@ import ru.mai.dep810.airbnb.server.dto.ClientDto
 import java.util.*
 
 fun ClientDto.toDataModel() : Client = Client(
-        id = UUID.randomUUID().toString(),
+        _id = UUID.randomUUID().toString(),
         name = this.name,
         creationDate = this.creationDate
 )

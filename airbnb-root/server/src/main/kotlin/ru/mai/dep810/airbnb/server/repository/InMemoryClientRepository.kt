@@ -11,14 +11,14 @@ class InMemoryClientRepository : IClientRepository {
             Client(UUID.randomUUID().toString(),"Andru", Date()),
             Client(UUID.randomUUID().toString(),"Antony", Date())
     )
-            .associateBy { client -> client.id }
+            .associateBy { client -> client._id }
             .toMutableMap()
 
     override fun findAll(): List<Client> =
             clients.values.toList()
 
     override fun save(client: Client): Client {
-        clients[client.id] = client
+        clients[client._id] = client
         return client
     }
 
