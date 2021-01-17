@@ -4,6 +4,7 @@ import com.hazelcast.core.HazelcastInstance
 import org.springframework.stereotype.Service
 import ru.mai.dep810.airbnb.server.data.Reservation
 import ru.mai.dep810.airbnb.server.data.ReservationStatus
+import ru.mai.dep810.airbnb.server.data.Room
 import ru.mai.dep810.airbnb.server.repository.ReservationMongoRepository
 import java.util.*
 
@@ -22,7 +23,7 @@ interface IReservationService{
 class ReservationService(val hazelcastInstance: HazelcastInstance,
                          val reservationRepository: ReservationMongoRepository) : IReservationService{
 
-    val reservationsCache = hazelcastInstance.getMap<UUID, Reservation>("reservation")
+    val reservationsCache = hazelcastInstance.getMap<UUID, Room>("room")
 
     override fun getReserveInfo(reservationId: UUID): Reservation =
             reservationRepository
@@ -44,7 +45,7 @@ class ReservationService(val hazelcastInstance: HazelcastInstance,
 
     override fun reserveRoom(reservation: Reservation) : Reservation {
         var reservationResult = reservation
-        val lockSuccess = reservationsCache.tryLock(reservation.id)
+        val lockSuccess = reservationsCache.tryLock(reservation.roomId)
         if(!lockSuccess)
             return reservationResult
         reservation.reservationStatus = ReservationStatus.Reserved
@@ -53,7 +54,7 @@ class ReservationService(val hazelcastInstance: HazelcastInstance,
             reservationResult = reservationRepository.save(reservation)
         }
         finally {
-            reservationsCache.unlock(reservation.id)
+            reservationsCache.unlock(reservation.roomId)
         }
 
         return reservationResult
@@ -74,7 +75,7 @@ class ReservationService(val hazelcastInstance: HazelcastInstance,
         if(reservation.reservationStatus != ReservationStatus.Reserved)
             return reservation
 
-        val lockSuccess = reservationsCache.tryLock(reservation.id)
+        val lockSuccess = reservationsCache.tryLock(reservation.roomId)
         if(!lockSuccess)
             return reservation
 
@@ -85,7 +86,7 @@ class ReservationService(val hazelcastInstance: HazelcastInstance,
             reservation = reservationRepository.save(reservation)
         }
         finally {
-            reservationsCache.unlock(reservation.id)
+            reservationsCache.unlock(reservation.roomId)
         }
         return reservation
     }
