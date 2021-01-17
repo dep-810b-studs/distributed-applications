@@ -20,7 +20,7 @@ fun RoomDto.toDataModel(id:UUID) : Room = Room(
 )
 
 fun RoomDto.toElasticDataModel(id: UUID): RoomElastic = RoomElastic(
-        id = id,
+        id = id.toString(),
         name = this.name,
         description = this.description,
         neighborhoodOverview = this.neighborhoodOverview,
@@ -29,7 +29,7 @@ fun RoomDto.toElasticDataModel(id: UUID): RoomElastic = RoomElastic(
         neighbourhood = this.neighbourhood,
         type = this.type ,
         price = this.price,
-        reviewsPerMonth = this.reviewsPerMonth.toFloat()
+        reviewsPerMonth = this.reviewsPerMonth
 )
 
 fun Room.toDtoModel() : RoomDto = RoomDto(

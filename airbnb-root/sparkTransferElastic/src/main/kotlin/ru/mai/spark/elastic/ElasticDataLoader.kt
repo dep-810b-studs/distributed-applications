@@ -1,20 +1,13 @@
 package ru.mai.spark.elastic
 
 import org.apache.spark.SparkConf
-import org.apache.spark.SparkContext
 import org.apache.spark.api.java.JavaRDD
-import org.apache.spark.api.java.JavaSparkContext
 import org.apache.spark.sql.*
-import org.apache.spark.sql.functions.lit
 import org.apache.spark.sql.functions.col
-import org.apache.spark.sql.functions.callUDF
-import org.apache.spark.sql.functions.udf
-import org.apache.spark.sql.types.DataTypes
 import java.io.File
 import java.io.FileInputStream
 import java.util.*
 import org.elasticsearch.spark.rdd.api.java.JavaEsSpark
-import java.util.*
 
 
 
@@ -61,8 +54,6 @@ object SparkTransferElastic : ISparkTransferElastic {
                 .option("multiline",true)
                 .option("inferSchema", "true")
                 .load(path)
-                //.withColumn("id", lit(1))
-                //.withColumn("id",udfRun())
                 .select(*superhero)
                 .withColumnRenamed("neighborhood_overview", "neighborhoodOverview")
                 .withColumnRenamed("host_location", "location")
@@ -70,7 +61,7 @@ object SparkTransferElastic : ISparkTransferElastic {
                 .withColumnRenamed("room_type","type")
                 .withColumnRenamed("reviews_per_month","reviewsPerMonth")
                 .withColumnRenamed("host_neighbourhood","neighbourhood")
-//                .withColumnRenamed("id","_id")
+                .withColumn("price", functions.expr("substring(price, 2, length(price))"))
                 .toJavaRDD()
                 .map { row ->
                     (columnsAr.indices)
@@ -79,6 +70,9 @@ object SparkTransferElastic : ISparkTransferElastic {
                             .toMap()
                 }
                 .filter { row -> (row["id"]?.length ?: 0) < 50 }
+
+
+
 
 //        println(rdd.take(10))
 
@@ -135,11 +129,5 @@ fun main() {
             prop.getProperty("elastic.flows").toInt(),
             prop.getProperty("elastic.rooms.index")
     )
-
-            /*SparkTransferElastic.loadFromXmlElastic(prop.getProperty("dump.clients.path"),
-            prop.getProperty("elastic.port"),
-            prop.getProperty("elastic.host"),
-            prop.getProperty("elastic.flows").toInt(),
-            prop.getProperty("elastic.clients.index"))*/
 
 }

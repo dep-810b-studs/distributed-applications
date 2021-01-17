@@ -18,15 +18,15 @@ data class Client(
 @Document("Rooms")
 data class Room(
         var id : UUID,
-        var name: String,
-        var description: String,
-        var neighborhoodOverview: String,
-        var location: String,
-        var about: String,
-        var neighbourhood: String,
-        var type: String,
-        var price: String,
-        var reviewsPerMonth: String
+        var name: String?,
+        var description: String?,
+        var neighborhoodOverview: String?,
+        var location: String?,
+        var about: String?,
+        var neighbourhood: String?,
+        var type: String?,
+        var price: String?,
+        var reviewsPerMonth: String?
 )
 
 

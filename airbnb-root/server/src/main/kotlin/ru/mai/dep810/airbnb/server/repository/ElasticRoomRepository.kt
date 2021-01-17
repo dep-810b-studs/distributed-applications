@@ -10,8 +10,9 @@ import java.util.*
 
 interface ElasticRoomRepository : ElasticsearchRepository<RoomElastic, String> {
 
-    //fun findAllByNeighborhoodOverviewAndNeighbourhoodAndDescriptionAndLocation(query: String): List<Room>
+    fun findTop100ByName(name: String): List<RoomElastic>
 
-    @Query("{\"match\": {\"name\": {\"query\": \"?0\"}}}")
-    fun findByName(name: String): List<RoomElastic>
+    fun findTop100ByDescriptionOrLocationOrNeighborhoodOverview(description:String,location: String, neighborhoodOverview:String): List<RoomElastic>
+
+    fun findTop100ByPriceIsLessThan(price:String): List<RoomElastic>
 }

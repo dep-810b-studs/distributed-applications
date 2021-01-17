@@ -27,6 +27,8 @@ interface IRoomService{
     fun addRoom(room: RoomDto) : RoomDto
     fun addRooms(room: List<RoomDto>)
     fun searchComon(text:String):List<RoomElastic>
+    fun findAll(description:String):List<RoomElastic>
+    fun findAllByPriceIsLessThan(name:String): List<RoomElastic>
 }
 
 @Service("roomService")
@@ -76,7 +78,15 @@ class RoomService : IRoomService{
 
 
     override fun searchComon(text:String): List<RoomElastic> =
-         roomElasticRepository.findByName(text)
+         roomElasticRepository.findTop100ByName(text)
+
+    override fun findAll(description:String): List<RoomElastic> =
+            roomElasticRepository.findTop100ByDescriptionOrLocationOrNeighborhoodOverview(description,description, description)
+
+    override fun  findAllByPriceIsLessThan(name:String): List<RoomElastic> =
+            roomElasticRepository.findTop100ByPriceIsLessThan(name)
+
+
 
 }
 

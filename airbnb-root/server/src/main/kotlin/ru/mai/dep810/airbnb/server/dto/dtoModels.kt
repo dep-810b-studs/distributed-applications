@@ -8,13 +8,13 @@ data class ClientDto(
 )
 
 data class RoomDto(
-        var name: String,
-        var description: String,
-        var neighborhoodOverview: String,
-        var location: String,
-        var about: String,
-        var neighbourhood: String,
-        var type: String,
-        var price: String,
-        var reviewsPerMonth: String
+        var name: String?,
+        var description: String?,
+        var neighborhoodOverview: String?,
+        var location: String?,
+        var about: String?,
+        var neighbourhood: String?,
+        var type: String?,
+        var price: String?,
+        var reviewsPerMonth: String?
 )

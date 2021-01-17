@@ -17,16 +17,23 @@ class RoomController {
     fun top3Rooms() : List<RoomDto> =
             roomService.getTop3Rooms()
 
-    @GetMapping("all")
-    fun allRooms() : List<RoomDto> =
-            roomService.getAllRooms()
-
     @PostMapping
     fun addRoom(@RequestBody roomDto: RoomDto) =
             roomService.addRoom(roomDto)
 
-    @PostMapping("textSearch")
+    @PostMapping("try")
     fun elasticSearch(@RequestBody text: String): List<RoomElastic> =
             roomService.searchComon(text)
+
+    @GetMapping("textSearch")
+    fun allSearchFind(@RequestParam description:String): List<RoomElastic> =
+            roomService.findAll(description)
+
+    @GetMapping("priceSearch")
+    fun priceSearchFind(@RequestParam text: String): List<RoomElastic> =
+            roomService.findAllByPriceIsLessThan(text)
+
+
+
 
 }
