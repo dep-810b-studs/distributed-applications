@@ -1,0 +1,5 @@
+replication:
+   replSetName: "airbnb-rs"
+net:
+   bindIp: localhost
+   port: 27017
