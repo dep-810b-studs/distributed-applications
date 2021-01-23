@@ -7,72 +7,53 @@ import org.apache.spark.sql.Dataset
 import org.apache.spark.sql.Row
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.functions
-import org.apache.spark.sql.functions.lit
-import org.apache.spark.sql.functions.col
-import org.apache.spark.sql.functions.callUDF
-import org.apache.spark.sql.functions.udf
-import org.apache.spark.sql.types.DataTypes
-import java.io.File
-import java.io.FileInputStream
-import java.util.*
 import org.bson.Document
 import java.util.*
 
-
-
 interface ISparkTransferMongo{
-
-    fun loadFromCsvMongo(path: String, database: String,host: String,port: Int,flows: Int)
-    fun loadFromXmlMongo(path: String, database:String, host:String, port:Int, flows:Int)
-
+    fun loadRoomsFromCsvToMongo()
+    fun loadClientsFromXmlToMongo()
 }
 
-object SparkTransferMongo : ISparkTransferMongo {
+class SparkTransferMongo(private val transferConfiguration: TransferConfiguration) : ISparkTransferMongo {
 
+    private val connectionString: String
 
-    override fun loadFromXmlMongo(path: String, database:String, host:String, port:Int, flows:Int) {
+    init {
+        connectionString = "mongodb://${transferConfiguration.host}:${transferConfiguration.port}/${transferConfiguration.database}"
+    }
 
+    override fun loadRoomsFromCsvToMongo() {
         val sparkConf: SparkConf = SparkConf().setAppName("Spark XML loader for Mongo")
-        sparkConf.setMaster("local[$flows]")
-        sparkConf.set("spark.mongodb.output.uri","mongodb://$host:$port/$database.Clients")
-        sparkConf.set("spark.mongodb.output.database","$database")
+        sparkConf.setMaster("local[${transferConfiguration.flows}]")
+        sparkConf.set("spark.mongodb.output.uri","${connectionString}.Clients")
+        sparkConf.set("spark.mongodb.output.database","${transferConfiguration.database}")
         sparkConf.set("spark.mongodb.output.collection","Clients")
         sparkConf.set("spark.mongodb.output.maxBatchSize","1024")
 
         val sesBuild = SparkSession.builder().config(sparkConf).orCreate
 
-
-        val rdd: JavaRDD<Document>  = sesBuild
+        val rdd: JavaRDD<Document> = sesBuild
                 .read()
                 .format("com.databricks.spark.xml")
                 .option("rowTag","row")
-                .load(path)
+                .load(transferConfiguration.path)
                 .toJavaRDD()
                 .map{row-> Document(mapOf("name" to row.getAs<String>("_DisplayName"),
                         "creationDate" to row.getAs<Date>("_CreationDate"),
-                        "_id" to UUID.randomUUID().toString())
-                )
-                 }
-
+                        "_id" to UUID.randomUUID().toString())) }
 
         MongoSpark.save(rdd)
         sesBuild.stop()
-
-
-
     }
 
-
-
-    override fun loadFromCsvMongo(path: String, database: String, host: String, port: Int, flows: Int)  {
-
-
+    override fun loadClientsFromXmlToMongo()  {
         val sparkConf: SparkConf = SparkConf().setAppName("Spark CSV loader for Mongo")
-            sparkConf.setMaster("local[$flows]")
-            sparkConf.set("spark.mongodb.output.uri","mongodb://$host:$port/$database.Rooms")
-            sparkConf.set("spark.mongodb.output.database","$database")
-            sparkConf.set("spark.mongodb.output.collection","Rooms")
-            sparkConf.set("spark.mongodb.output.maxBatchSize","1024")
+        sparkConf.setMaster("local[${transferConfiguration.flows}]")
+        sparkConf.set("spark.mongodb.output.uri","mongodb://${connectionString}.Rooms")
+        sparkConf.set("spark.mongodb.output.database","${transferConfiguration.database}")
+        sparkConf.set("spark.mongodb.output.collection","Rooms")
+        sparkConf.set("spark.mongodb.output.maxBatchSize","1024")
 
         val sesBuild = SparkSession.builder()
                 .config(sparkConf)
@@ -84,7 +65,7 @@ object SparkTransferMongo : ISparkTransferMongo {
                 "price",
                 "reviews_per_month")
 
-        val superhero = columnsAr.map{ col(it) }.toTypedArray()
+        val superhero = columnsAr.map{ functions.col(it) }.toTypedArray()
 
         val df: Dataset<Row> = sesBuild.read()
                 .format("csv")//ஸ
@@ -94,7 +75,7 @@ object SparkTransferMongo : ISparkTransferMongo {
                 .option("escape","\\")
                 .option("multiline",true)
                 .option("inferSchema", "true")
-                .load(path)
+                .load(transferConfiguration.path)
                 //.withColumn("id", lit(1))
                 //.withColumn("id",udfRun())
                 .select(*superhero)
@@ -107,33 +88,7 @@ object SparkTransferMongo : ISparkTransferMongo {
                 .withColumnRenamed("host_neighbourhood","neighbourhood")
                 .withColumn("price", functions.expr("substring(price, 2, length(price))"))
 
-
         MongoSpark.save(df)
-
         sesBuild.stop()
-
     }
-
-}
-
-
-fun main(args: Array<String>) {
-
-    val file = File("D:/GIT/distributed-applications/airbnb-root/sparkTransferMongo/src/main/resources/application.properties")
-
-    val prop = Properties()
-    FileInputStream(file).use { prop.load(it) }
-
-    SparkTransferMongo.loadFromXmlMongo(prop.getProperty("dump.clients.path"),
-            prop.getProperty("mongo.database"),
-            prop.getProperty("mongo.host"),
-            prop.getProperty("mongo.port").toInt(),
-            prop.getProperty("dump.clients.flows").toInt())
-
-    SparkTransferMongo.loadFromCsvMongo(prop.getProperty("dump.rooms.path"),
-            prop.getProperty("mongo.database"),
-            prop.getProperty("mongo.host"),
-            prop.getProperty("mongo.port").toInt(),
-            prop.getProperty("dump.rooms.flows").toInt())
-
 }
