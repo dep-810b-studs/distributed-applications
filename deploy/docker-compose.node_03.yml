@@ -1,0 +1,12 @@
+services:
+  backend_node_03:
+    build: ./../airbnb-root/server
+    command: java -jar server-0.0.1-SNAPSHOT.jar --server.port=5002
+    volumes:
+      - ./:/app/server/target/
+    ports:
+      - 5002:5002
+networks:
+  default:
+   external:
+     name: airbnb-network
