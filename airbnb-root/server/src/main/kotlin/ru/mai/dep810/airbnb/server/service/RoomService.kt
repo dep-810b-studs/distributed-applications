@@ -40,17 +40,10 @@ class RoomService : IRoomService{
     @Autowired
     private lateinit var roomElasticRepository: ElasticRoomRepository
 
-
-
-
-
     override fun getAllRooms(): List<RoomDto> =
         roomRepository
                 .findAll()
                 .map { room -> room.toDtoModel() }
-
-
-
 
     override fun addRooms(roomsDto: List<RoomDto>) {
 
@@ -85,8 +78,5 @@ class RoomService : IRoomService{
 
     override fun  findAllByPriceIsLessThan(name:String): List<RoomElastic> =
             roomElasticRepository.findTop100ByPriceIsLessThan(name)
-
-
-
 }
 
