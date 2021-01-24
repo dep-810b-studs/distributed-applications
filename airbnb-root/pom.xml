@@ -19,7 +19,7 @@
     <modules>
         <module>server</module>
         <module>spark-transfer-mongo</module>
-        <module>sparkTransferElastic</module>
+        <module>spark-transfer-elastic</module>
     </modules>
 
     <properties>
