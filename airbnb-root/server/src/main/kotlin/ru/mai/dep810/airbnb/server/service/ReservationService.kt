@@ -90,9 +90,4 @@ class ReservationService(val hazelcastInstance: HazelcastInstance,
         }
         return reservation
     }
-
-    companion object {
-        private const val RESERVATION_PENDING_MINUTES = 2L
-    }
-
 }
