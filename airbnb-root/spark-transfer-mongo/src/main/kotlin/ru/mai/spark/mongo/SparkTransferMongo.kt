@@ -23,7 +23,7 @@ class SparkTransferMongo(private val transferConfiguration: TransferConfiguratio
         connectionString = "mongodb://${transferConfiguration.host}:${transferConfiguration.port}/${transferConfiguration.database}"
     }
 
-    override fun loadRoomsFromCsvToMongo() {
+    override fun loadClientsFromXmlToMongo() {
         val sparkConf: SparkConf = SparkConf().setAppName("Spark XML loader for Mongo")
         sparkConf.setMaster("local[${transferConfiguration.flows}]")
         sparkConf.set("spark.mongodb.output.uri","${connectionString}.Clients")
@@ -37,7 +37,7 @@ class SparkTransferMongo(private val transferConfiguration: TransferConfiguratio
                 .read()
                 .format("com.databricks.spark.xml")
                 .option("rowTag","row")
-                .load(transferConfiguration.path)
+                .load(transferConfiguration.clientsPath)
                 .toJavaRDD()
                 .map{row-> Document(mapOf("name" to row.getAs<String>("_DisplayName"),
                         "creationDate" to row.getAs<Date>("_CreationDate"),
@@ -47,10 +47,10 @@ class SparkTransferMongo(private val transferConfiguration: TransferConfiguratio
         sesBuild.stop()
     }
 
-    override fun loadClientsFromXmlToMongo()  {
+    override fun loadRoomsFromCsvToMongo()  {
         val sparkConf: SparkConf = SparkConf().setAppName("Spark CSV loader for Mongo")
         sparkConf.setMaster("local[${transferConfiguration.flows}]")
-        sparkConf.set("spark.mongodb.output.uri","mongodb://${connectionString}.Rooms")
+        sparkConf.set("spark.mongodb.output.uri","${connectionString}.Rooms")
         sparkConf.set("spark.mongodb.output.database","${transferConfiguration.database}")
         sparkConf.set("spark.mongodb.output.collection","Rooms")
         sparkConf.set("spark.mongodb.output.maxBatchSize","1024")
@@ -68,14 +68,14 @@ class SparkTransferMongo(private val transferConfiguration: TransferConfiguratio
         val superhero = columnsAr.map{ functions.col(it) }.toTypedArray()
 
         val df: Dataset<Row> = sesBuild.read()
-                .format("csv")//ஸ
+                .format("com.databricks.spark.csv")//ஸ
                 .option("sep","ஸ")
                 .option("header","true")
                 .option("quote", "\"")
                 .option("escape","\\")
                 .option("multiline",true)
                 .option("inferSchema", "true")
-                .load(transferConfiguration.path)
+                .load(transferConfiguration.roomsPath)
                 //.withColumn("id", lit(1))
                 //.withColumn("id",udfRun())
                 .select(*superhero)
