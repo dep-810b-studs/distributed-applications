@@ -36,7 +36,7 @@ class SparkTransferElastic(private val transferConfiguration: TransferConfigurat
         val superhero = columnsAr.map{ functions.col(it) }.toTypedArray()
 
         val rdd: JavaRDD<Map<String, String>> = sesBuild.read()
-            .format("csv")//ஸ
+            .format("com.databricks.spark.csv")//ஸ
             .option("sep","ஸ")
             .option("header","true")
             .option("quote", "\"")
