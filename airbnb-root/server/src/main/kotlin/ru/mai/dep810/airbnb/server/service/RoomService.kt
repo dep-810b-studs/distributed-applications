@@ -64,10 +64,9 @@ class RoomService : IRoomService{
     }
 
 
-    fun getTop3Rooms():List<RoomDto> =
+    fun getTop3Rooms():List<Room> =
             roomRepository
-                    .findTop3ByOrderByIdDesc()
-                    .map{room -> room.toDtoModel()}
+                    .findTop15ByOrderByIdDesc()
 
 
     override fun searchComon(text:String): List<RoomElastic> =

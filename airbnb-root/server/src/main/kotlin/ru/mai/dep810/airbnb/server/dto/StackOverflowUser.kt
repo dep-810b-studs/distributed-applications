@@ -4,7 +4,7 @@ import java.util.*
 
 data class StackOverflowUser (
         val DisplayName: String,
-        val CreationDate: Date)
+        val CreationDate: String)
 
 fun StackOverflowUser.toClientDto() =
         ClientDto(this.DisplayName,this.CreationDate)

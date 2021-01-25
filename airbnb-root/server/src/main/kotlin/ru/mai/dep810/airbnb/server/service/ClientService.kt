@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import ru.mai.dep810.airbnb.server.configuration.DumpClientsConfiguration
 import ru.mai.dep810.airbnb.server.configuration.DumpMongoConfiguration
+import ru.mai.dep810.airbnb.server.data.Client
 import ru.mai.dep810.airbnb.server.dto.ClientDto
 import ru.mai.dep810.airbnb.server.repository.MongoClientRepository
 import ru.mai.dep810.airbnb.server.mapping.toDataModel
@@ -13,7 +14,7 @@ import java.util.*
 import javax.annotation.PostConstruct
 
 interface IClientService {
-    fun getAllClients() : List<ClientDto>
+    fun getTopClients() : List<Client>
     fun addClient(clientDto: ClientDto): ClientDto
     fun addClients(clients: List<ClientDto>)
     fun deleteClient(uuid: UUID)
@@ -26,10 +27,10 @@ class ClientService : IClientService {
     private lateinit var clientRepository: MongoClientRepository
 
 
-    override fun getAllClients(): List<ClientDto>  =
+    override fun getTopClients(): List<Client>  =
         clientRepository
-                .findAll()
-                .map { client -> client.toDtoModel() }
+                .findTop10ByOrderByCreationDateDesc()
+
 
     override fun addClient(clientDto: ClientDto): ClientDto {
         val clientData = clientDto.toDataModel()
@@ -44,6 +45,4 @@ class ClientService : IClientService {
 
     override fun deleteClient(uuid: UUID) =
             clientRepository.deleteById(uuid)
-
-
 }

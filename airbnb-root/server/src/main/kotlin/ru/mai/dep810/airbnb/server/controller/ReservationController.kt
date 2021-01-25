@@ -23,7 +23,7 @@ class ReservationController {
     }
 
     @GetMapping("room")
-    fun roomReservations(@RequestParam roomId: UUID): List<Reservation> =
+    fun roomReservations(@RequestParam roomId: String): List<Reservation> =
             reservationService.getRoomReservations(roomId)
 
     @GetMapping("client")

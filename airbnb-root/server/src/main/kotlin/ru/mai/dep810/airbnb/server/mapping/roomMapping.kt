@@ -7,7 +7,7 @@ import ru.mai.dep810.airbnb.server.dto.RoomDto
 import java.util.*
 
 fun RoomDto.toDataModel(id:UUID) : Room = Room(
-        id = id,
+        id = id.toString(),
         name = this.name,
         description = this.description,
         neighborhoodOverview = this.neighborhoodOverview,

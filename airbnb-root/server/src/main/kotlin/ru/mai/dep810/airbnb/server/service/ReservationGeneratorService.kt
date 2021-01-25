@@ -1,6 +1,5 @@
 package ru.mai.dep810.airbnb.server.service
 
-import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
@@ -27,7 +26,7 @@ class ReservationGeneratorService{
     private fun init() {
         if(reservationsGeneratorShouldStart){
             logger.info("Reservations generating started...")
-            val clients = clientRepository.findAll()
+            val clients = clientRepository.findAll().toList()
             val rooms = roomRepository.findAll().toList()
             val reservationsGenerator = ReservationsGenerator()
             val reservations = reservationsGenerator.makeRandomReservations(clients, rooms)
