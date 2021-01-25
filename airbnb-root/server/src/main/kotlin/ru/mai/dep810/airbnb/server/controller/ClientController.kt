@@ -1,6 +1,7 @@
 package ru.mai.dep810.airbnb.server.controller
 
 import org.springframework.web.bind.annotation.*
+import ru.mai.dep810.airbnb.server.data.Client
 import ru.mai.dep810.airbnb.server.dto.ClientDto
 import ru.mai.dep810.airbnb.server.service.ClientService
 import java.util.*
@@ -9,8 +10,8 @@ import java.util.*
 @RequestMapping("clients")
 class ClientController(val clientService: ClientService) {
     @GetMapping
-    fun allClients() : List<ClientDto> =
-            clientService.getAllClients()
+    fun topClients() : List<Client> =
+            clientService.getTopClients()
 
     @PostMapping
     fun addClient(@RequestBody clientDto: ClientDto) : ClientDto =

@@ -4,7 +4,7 @@ import java.util.*
 
 data class ClientDto(
         var name: String,
-        var creationDate: Date
+        var creationDate: String
 )
 
 data class RoomDto(

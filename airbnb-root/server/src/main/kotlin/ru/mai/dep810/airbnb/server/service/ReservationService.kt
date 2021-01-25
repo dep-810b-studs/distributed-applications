@@ -10,7 +10,7 @@ import java.util.*
 
 interface IReservationService{
     fun getReserveInfo(reservationId: UUID) : Reservation
-    fun getRoomReservations(roomId: UUID) : List<Reservation>
+    fun getRoomReservations(roomId: String) : List<Reservation>
     fun getClientReservations(clientId: UUID) : List<Reservation>
     fun getAllReservations() : List<Reservation>
     fun reserveRoom(reservation: Reservation) : Reservation
@@ -23,14 +23,14 @@ interface IReservationService{
 class ReservationService(val hazelcastInstance: HazelcastInstance,
                          val reservationRepository: ReservationMongoRepository) : IReservationService{
 
-    val reservationsCache = hazelcastInstance.getMap<UUID, Room>("room")
+    val reservationsCache = hazelcastInstance.getMap<String, Room>("room")
 
     override fun getReserveInfo(reservationId: UUID): Reservation =
             reservationRepository
                     .findById(reservationId)
                     .get()
 
-    override fun getRoomReservations(roomId: UUID): List<Reservation> =
+    override fun getRoomReservations(roomId: String): List<Reservation> =
             reservationRepository
                     .findAllByRoomId(roomId)
 
@@ -90,9 +90,4 @@ class ReservationService(val hazelcastInstance: HazelcastInstance,
         }
         return reservation
     }
-
-    companion object {
-        private const val RESERVATION_PENDING_MINUTES = 2L
-    }
-
 }

@@ -35,3 +35,5 @@ https://clck.ru/SpwfN
 `.\deploy\deploy.sh`
 ### Заверение работы приложения:
 `.\deploy\stop_all.sh`
+### Деплой трех узлов mongodb (Windows):
+`.\deploy\deploy_mongo.ps1`

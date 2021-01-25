@@ -4,7 +4,6 @@ import org.springframework.data.mongodb.core.mapping.Document
 import java.time.Instant
 import java.util.*
 import org.springframework.data.annotation.Id
-//import org.springframework.data.elasticsearch.annotations.Document
 
 enum class ReservationStatus {NotReserved, Reserved, Paid}
 
@@ -12,12 +11,12 @@ enum class ReservationStatus {NotReserved, Reserved, Paid}
 data class Client(
         var _id : String,
         var name: String,
-        var creationDate: Date
+        var creationDate: String
 )
 
 @Document("Rooms")
 data class Room(
-        var id : UUID,
+        var id : String,
         var name: String?,
         var description: String?,
         var neighborhoodOverview: String?,
@@ -29,12 +28,10 @@ data class Room(
         var reviewsPerMonth: String?
 )
 
-
-
 @Document("Reservations")
 data class Reservation(
         var id : UUID ,
-        var roomId: UUID,
+        var roomId: String,
         var clientId: UUID,
         var reservationStartDate: Instant,
         var reservationEndDate: Instant,
