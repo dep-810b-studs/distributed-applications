@@ -4,6 +4,10 @@ services:
     command: mongod --port 27018
     container_name: 'mongo_instance'
     restart: unless-stopped
+    #entrypoint: [ "/usr/bin/mongod", "--bind_ip_all", "--replSet", "rs0" ]
+    #entrypoint: [ "/usr/bin/mongod", "--bind_ip_all", "--replSet", "rs0", "--journal", "--dbpath", "/data/db", "--enableMajorityReadConcern", "false" ]
+    environment:
+      - MONGO_REPLICA_SET_NAME=rs0
     ports:
       - 27018:27018
     networks:
@@ -37,7 +41,7 @@ services:
       - SPRING_ELASTICSEARCH_REST_URIS=http://elastic_instance:9200
     depends_on:
       - mongo_node_01
-      - es
+      #- es
     networks:
       - airbnb-network
 
