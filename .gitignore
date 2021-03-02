@@ -5,6 +5,8 @@ deploy/mongo_storage/
 !**/src/main/**/target/
 !**/src/test/**/target/
 
+**.config
+
 ### STS ###
 .apt_generated
 .classpath
@@ -24,6 +26,10 @@ deploy/mongo_storage/
 us.xml
 Users.xml
 listings.csv
+**.tar
+**.7z
+**.csv
+
 
 ### NetBeans ###
 /nbproject/private/
@@ -36,4 +42,14 @@ build/
 !**/src/test/**/build/
 
 ### VS Code ###
-.vscode/
+**/.vscode/
+
+### .Net Core ###
+**/*.dll
+**/*.gz
+**/*.cache
+**/pdb/
+**/obj/
+**/bin/
+**/*.suo
+**/*.testlog
