@@ -1,0 +1,48 @@
+﻿@page "/rooms"
+@inject HttpClient Http
+
+<h1>Avaible rooms</h1>
+
+<p>In this page you can see avaible for reserving rooms.</p>
+
+<input>Please enter a room description</input>
+
+@if (rooms == null)
+{
+    <p>
+        <em>Loading...</em>
+    </p>
+}
+else
+{
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th style="width: 10px;">Description</th>
+            <th style="width: 10px;">NeighborhoodOverview</th>
+        </tr>
+        </thead>
+        <tbody>
+
+        @foreach (var room in rooms)
+        {
+            <tr>
+                <td>@room.Name</td>
+                <td>@room.Description</td>
+                <td>@room.NeighborhoodOverview</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
+
+@code {
+    private Room[] rooms;
+
+    protected override async Task OnInitializedAsync()
+    {
+        rooms = await Http.GetFromJsonAsync<Room[]>("rooms/all");
+    }
+    
+}
