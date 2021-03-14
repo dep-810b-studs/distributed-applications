@@ -1,31 +1,27 @@
 services:
   mongo_node_01:
     image: mongo:4.1.9
-    command: mongod --port 27018
+    entrypoint: [ "mongod","--port","27018","--bind_ip_all","--replSet", "rs0" ]
     container_name: 'mongo_instance'
     restart: unless-stopped
-    #entrypoint: [ "/usr/bin/mongod", "--bind_ip_all", "--replSet", "rs0" ]
-    #entrypoint: [ "/usr/bin/mongod", "--bind_ip_all", "--replSet", "rs0", "--journal", "--dbpath", "/data/db", "--enableMajorityReadConcern", "false" ]
-    environment:
-      - MONGO_REPLICA_SET_NAME=rs0
     ports:
       - 27018:27018
     networks:
       - airbnb-network
 
 
-  #es:
-   # image: docker.elastic.co/elasticsearch/elasticsearch:7.11.0
-    #container_name: 'elastic_instance'
-    #restart: unless-stopped
-    #ulimits:
-    #  memlock:
-     #   soft: -1
+      #es:
+      # image: docker.elastic.co/elasticsearch/elasticsearch:7.11.0
+      #container_name: 'elastic_instance'
+      #restart: unless-stopped
+      #ulimits:
+      #  memlock:
+      #   soft: -1
       #  hard: -1
-    #ports:
-     # - 9200:9200
-    #networks:
-     # - airbnb-network
+      #ports:
+      # - 9200:9200
+      #networks:
+      # - airbnb-network
 
 
   backend_node_01:
@@ -41,7 +37,6 @@ services:
       - SPRING_ELASTICSEARCH_REST_URIS=http://elastic_instance:9200
     depends_on:
       - mongo_node_01
-      #- es
     networks:
       - airbnb-network
 

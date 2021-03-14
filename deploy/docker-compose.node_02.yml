@@ -1,12 +1,15 @@
 services:
-  backend_node_02:
-    build: ./../airbnb-root/server
-    command: java -jar server-0.0.1-SNAPSHOT.jar --server.port=5001
-    volumes:
-      - ./:/app/server/target/
+  mongo_node_02:
+    image: mongo:4.1.9
+    entrypoint: [ "mongod","--port","27019", "--bind_ip_all", "--replSet", "rs0" ]
+    container_name: 'mongo_instance_master'
+    restart: unless-stopped
+    environment:
+      - MONGO_REPLICA_SET_NAME=rs0
     ports:
-      - 5001:5001
+      - 27019:27019
+    networks:
+      - airbnb-network
 networks:
-  default:
-   external:
-     name: airbnb-network
+  airbnb-network:
+    driver: bridge
