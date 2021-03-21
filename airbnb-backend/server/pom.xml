@@ -16,7 +16,7 @@
 
 	<properties>
 		<java.version>11</java.version>
-		<kotlin.version>1.4.20-M1</kotlin.version>
+		<kotlin.version>1.5.0-M1</kotlin.version>
 		<mongo.driver>4.1.0</mongo.driver>
 		<springfox>2.8.0</springfox>
 		<junit>5.7.0</junit>
@@ -108,6 +108,11 @@
 			<artifactId>commons-csv</artifactId>
 			<version>1.8</version>
 		</dependency>
+        <dependency>
+            <groupId>org.jetbrains.kotlin</groupId>
+            <artifactId>kotlin-stdlib-jdk8</artifactId>
+            <version>${kotlin.version}</version>
+        </dependency>
     </dependencies>
 
 	<repositories>
