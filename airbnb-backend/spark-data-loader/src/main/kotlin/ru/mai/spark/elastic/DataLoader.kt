@@ -1,12 +1,14 @@
-package ru.mai.spark.mongo
+package ru.mai.spark.elastic
 
+import ru.mai.spark.mongo.SparkTransferMongo
 import java.io.File
 import java.io.FileInputStream
+import java.lang.IllegalArgumentException
 import java.util.*
 
 fun main(args: Array<String>) {
 
-    if(args.size < 2) {
+    if(args.size < 3) {
         println("There is not enough command line arguments. Program cant work");
         return;
     }
@@ -28,7 +30,7 @@ fun main(args: Array<String>) {
         println("File with properties is not correct. ${ex.localizedMessage}. Program cant work")
     }
 
-    var transferConfiguration = TransferConfiguration()
+    var transferConfiguration: TransferConfiguration
 
     try {
         transferConfiguration = prop.toTransferConfiguration()
@@ -38,12 +40,18 @@ fun main(args: Array<String>) {
         return;
     }
 
-    val sparkTransferMongo = SparkTransferMongo(transferConfiguration)
-    val entityToTransfer = args[1]
+    val transferTarget = args[1]
+
+    val sparkExporter = when(transferTarget){
+        "mongo" -> SparkTransferMongo(transferConfiguration)
+        "elastic" -> SparkTransferElastic(transferConfiguration)
+        else -> throw IllegalArgumentException("This transfer target(${transferTarget}) its not supported.")
+    }
+    val entityToTransfer = args[2]
 
     when(entityToTransfer){
-        "clients" -> sparkTransferMongo.loadClientsFromXmlToMongo()
-        "rooms" -> sparkTransferMongo.loadRoomsFromCsvToMongo()
+        "clients" -> sparkExporter.loadClientsFromXml()
+        "rooms" -> sparkExporter.loadRoomsFromCsv()
         else -> println("This option (${entityToTransfer}) is not supported")
     }
 }

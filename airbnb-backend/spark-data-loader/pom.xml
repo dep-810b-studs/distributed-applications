@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>ru.mai.spark.elastic</groupId>
-    <artifactId>spark-transfer-elastic</artifactId>
+    <artifactId>spark-data-exporter</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <properties>
@@ -13,13 +13,13 @@
         <scala.version>2.11</scala.version>
         <java.version>11</java.version>
         <kotlin.version>1.4.20-M1</kotlin.version>
-        <main.class>ru.mai.spark.elastic.ElasticDataLoaderKt</main.class>
+        <main.class>ru.mai.spark.elastic.DataLoaderKt</main.class>
     </properties>
 
 
     <parent>
         <groupId>ru.mai.dep810</groupId>
-        <artifactId>airbnb-root</artifactId>
+        <artifactId>airbnb-backend</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
 

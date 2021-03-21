@@ -8,14 +8,11 @@ import org.apache.spark.sql.Row
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.functions
 import org.bson.Document
+import ru.mai.spark.elastic.ISparkExporter
 import java.util.*
 
-interface ISparkTransferMongo{
-    fun loadRoomsFromCsvToMongo()
-    fun loadClientsFromXmlToMongo()
-}
 
-class SparkTransferMongo(private val transferConfiguration: TransferConfiguration) : ISparkTransferMongo {
+class SparkTransferMongo(private val transferConfiguration: TransferConfiguration) : ISparkExporter {
 
     private val connectionString: String
 
@@ -23,7 +20,7 @@ class SparkTransferMongo(private val transferConfiguration: TransferConfiguratio
         connectionString = "mongodb://${transferConfiguration.host}:${transferConfiguration.port}/${transferConfiguration.database}"
     }
 
-    override fun loadClientsFromXmlToMongo() {
+    override fun loadClientsFromXml() {
         val sparkConf: SparkConf = SparkConf().setAppName("Spark XML loader for Mongo")
         sparkConf.setMaster("local[${transferConfiguration.flows}]")
         sparkConf.set("spark.mongodb.output.uri","${connectionString}.Clients")
@@ -47,7 +44,7 @@ class SparkTransferMongo(private val transferConfiguration: TransferConfiguratio
         sesBuild.stop()
     }
 
-    override fun loadRoomsFromCsvToMongo()  {
+    override fun loadRoomsFromCsv()  {
         val sparkConf: SparkConf = SparkConf().setAppName("Spark CSV loader for Mongo")
         sparkConf.setMaster("local[${transferConfiguration.flows}]")
         sparkConf.set("spark.mongodb.output.uri","${connectionString}.Rooms")

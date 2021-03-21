@@ -7,12 +7,7 @@ import org.apache.spark.sql.functions
 import org.elasticsearch.spark.rdd.api.java.JavaEsSpark
 import java.util.*
 
-interface ISparkTransferElastic{
-    fun loadRoomsFromCsvToElastic()
-    fun loadClientsFromXmlToElastic()
-}
-
-class SparkTransferElastic(private val transferConfiguration: TransferConfiguration) : ISparkTransferElastic {
+class SparkTransferElastic(private val transferConfiguration: TransferConfiguration) : ISparkExporter {
 
     private val connectionString: String
 
@@ -20,7 +15,7 @@ class SparkTransferElastic(private val transferConfiguration: TransferConfigurat
         connectionString = "${transferConfiguration.host}:${transferConfiguration.port.toString()}"
     }
 
-    override fun loadRoomsFromCsvToElastic() {
+    override fun loadRoomsFromCsv() {
 
         val sparkConf: SparkConf = SparkConf().setAppName("Spark CSV loader for Elastic")
         sparkConf.setMaster("local[${transferConfiguration.flows}]")
@@ -65,7 +60,7 @@ class SparkTransferElastic(private val transferConfiguration: TransferConfigurat
         sesBuild.stop()
     }
 
-    override fun loadClientsFromXmlToElastic() {
+    override fun loadClientsFromXml() {
 
         val sparkConf: SparkConf = SparkConf().setAppName("Spark XML loader for Elastic")
         sparkConf.setMaster("local[${transferConfiguration.flows}]")
